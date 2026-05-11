@@ -22,7 +22,7 @@ namespace TaskManagementApp.Models
             return _connString;
         }
 
-        // Common Function: Data Select karne ke liye
+       
         public DataTable GetTable(string query, SqlParameter[] parameters = null)
         {
             using (SqlConnection con = new SqlConnection(_connString))
@@ -38,7 +38,7 @@ namespace TaskManagementApp.Models
 
         public DataTable ExecuteQuerytoGetDataTble(string query, SqlParameter[] parameters = null)
         {
-            // Simple logic using System.Data.SqlClient
+          
             using (SqlConnection con = new SqlConnection(_connString))
             {
                 SqlCommand cmd = new SqlCommand(query, con);
@@ -65,7 +65,7 @@ namespace TaskManagementApp.Models
             }
         }
 
-        // Common Function: Insert/Update/Delete ke liye
+      
         public int ExecuteQuery(string query, SqlParameter[] parameters)
         {
             using (SqlConnection con = new SqlConnection(_connString))
@@ -113,7 +113,7 @@ namespace TaskManagementApp.Models
         }
         public int ExecuteProcedureWithTransAndCon(string procName, SqlParameter[] parameters, SqlTransaction trans, SqlConnection con)
         {
-            // SqlCommand ko using mein rakhein taaki memory release ho jaye
+            
             using (SqlCommand cmd = new SqlCommand(procName, con, trans))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
