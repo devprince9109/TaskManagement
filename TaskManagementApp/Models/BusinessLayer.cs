@@ -18,7 +18,7 @@ namespace TaskManagementApp.Models
             _connString = _dl.GetConnString();
         }
 
-        // 1. GET ALL TASKS & SEARCH
+        
         public List<TaskDetail> GetAllTasks(string searchKeyword = "")
         {
            
@@ -43,7 +43,7 @@ namespace TaskManagementApp.Models
             return list;
         }
 
-        // 2. GET SINGLE TASK BY ID
+        
         public TaskDetail GetTaskById(int id)
         {
             TaskDetail task = new TaskDetail();
