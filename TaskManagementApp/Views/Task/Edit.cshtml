@@ -1,0 +1,165 @@
+﻿@model TaskManagementApp.Models.TaskDetail
+
+@{
+    ViewBag.Title = "Edit Task";
+}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-top: 30px;
+    }
+
+    .card-header {
+        background-color: #007bff;
+        color: white;
+        border-radius: 10px 10px 0 0 !important;
+        padding: 15px 20px;
+    }
+
+    .form-control {
+        border-radius: 6px;
+    }
+
+    .btn-update {
+        background-color: #28a745;
+        color: white;
+        border-radius: 6px;
+        padding: 8px 30px;
+        border: none;
+    }
+
+        .btn-update:hover {
+            background-color: #218838;
+            color: white;
+        }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+        border-radius: 6px;
+        padding: 8px 30px;
+    }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+            color: white;
+        }
+</style>
+
+
+<script>
+
+    if ('@ViewBag.Message' != null && '@ViewBag.Message' != '')
+    {
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if ('@ViewBag.Message'.includes('successfully')) {
+
+                Swal.fire({
+                    title: 'Success!',
+                    text: '@ViewBag.Message',
+                    icon: 'success',
+                    confirmButtonColor: '#007bff',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+                        window.location.href = "/Task/Index"
+                    }
+                });
+            }
+            else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Some thing went wrong',
+                    icon: 'error',
+                    confirmButtonColor: '#dc3545',
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+                        window.location.href = "/Task/Index";
+                    }
+                });
+            }
+
+
+        });
+    }
+
+
+</script>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fa fa-edit mr-2"></i> Update Task Details</h4>
+                </div>
+                <div class="card-body p-4">
+
+
+
+                    @using (Html.BeginForm("Edit", "Task", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.HiddenFor(model => model.Task_Id)
+
+                        <div class="row" style="padding-left:50px;">
+                            <div class="col-sm-6" style="margin-top:15px;">
+                                <label class="font-weight-bold">Task Title <span class="text-danger">*</span></label>
+                                @Html.TextBoxFor(model => model.TaskTitle, new { @class = "form-control" })
+                            </div>
+
+                            <div class="col-sm-6" style="margin-top:15px;">
+                                <label class="font-weight-bold">Status <span class="text-danger">*</span></label>
+                                @Html.DropDownListFor(model => model.TaskStatus, new List<SelectListItem>
+                                {
+                                    new SelectListItem { Text = "Pending", Value = "2" },
+                                    new SelectListItem { Text = "In Progress", Value = "1" },
+                                    new SelectListItem { Text = "Completed", Value = "3" }
+                                }, new { @class = "form-control" })
+                            </div>
+
+                            <div class="col-sm-6" style="margin-top:15px;">
+                                <label class="font-weight-bold">Task Description</label>
+                                @Html.TextAreaFor(model => model.TaskDescription, new { @class = "form-control", rows = 3 })
+                            </div>
+
+                            <div class="col-sm-6" style="margin-top:15px;">
+                                <label class="font-weight-bold">Remarks</label>
+                                @Html.TextAreaFor(model => model.TaskRemarks, new { @class = "form-control", rows = 3 })
+                            </div>
+
+                            <div class="col-sm-6" style="margin-top:15px;">
+                                <label class="font-weight-bold">Due Date <span class="text-danger">*</span></label>
+                                @Html.TextBoxFor(model => model.TaskDueDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                            </div>
+                        </div>
+
+                        <hr style="margin-top: 30px;" />
+
+                        <div class="row">
+                            <div class="col-sm-12 text-center">
+
+                                <button type="submit" class="btn btn-update">
+                                    <i class="fa fa-save"></i> Save Changes
+                                </button>
+                            </div>
+                        </div>
+                        <br />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,195 @@
+﻿@model IEnumerable<TaskManagementApp.Models.TaskDetail>
+
+@{
+    ViewBag.Title = "All Tasks";
+}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-top: 30px;
+    }
+
+    .card-header {
+        background: linear-gradient(45deg, #007bff, #0056b3);
+        color: white;
+        border-radius: 15px 15px 0 0 !important;
+        padding: 20px;
+    }
+
+    .table th {
+        background-color: #f1f5f9;
+        color: #333;
+        font-weight: 600;
+        border-top: none;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    .btn-update {
+        background-color: #ffc107;
+        color: #000;
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 6px 15px;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+        .btn-update:hover {
+            background-color: #e0a800;
+            color: #000;
+            text-decoration: none;
+        }
+
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .status-pen {
+        background: #ffeeba;
+        color: #856404;
+    }
+
+    .status-prog {
+        background: #b8daff;
+        color: #004085;
+    }
+
+    .status-com {
+        background: #c3e6cb;
+        color: #155724;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#taskTable').DataTable();
+    });
+</script>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<div class="container">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0"><i class="fa fa-list mr-2"></i> Task List</h3>
+            <a href="@Url.Action("CreateTask", "Task")" class="btn btn-light text-primary font-weight-bold" style="border-radius: 20px;">
+                <i class="fa fa-plus"></i> Add New Task
+            </a>
+        </div>
+        <div class="card-body p-4">
+
+            <div class="table-responsive">
+                <table class="table table-hover border-bottom" id="taskTable">
+                    <thead>
+                        <tr>
+                            <th>Sr.No.</th>
+                            <th>Task Title</th>
+                            <th>Description</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            int i = 1;
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="font-weight-bold">@i</td>
+                                    <td class="font-weight-bold">@item.TaskTitle</td>
+                                    <td class="text-muted">@item.TaskDescription</td>
+                                    <td>@item.TaskDueDate.ToString("dd-MMM-yyyy")</td>
+                                    <td>
+                                        @if (item.TaskStatus == "3" || item.TaskStatus == "Completed")
+                                        {<span class="status-badge status-com">Completed</span> }
+                                        else if (item.TaskStatus == "1" || item.TaskStatus == "In Progress")
+                                        { <span class="status-badge status-prog">In Progress</span> }
+                                        else
+                                        { <span class="status-badge status-pen">Pending</span>}
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="@Url.Action("Edit", "Task", new { Task_Id = item.Task_Id })" class="btn-update">
+                                            <i class="fa fa-edit"></i> Update
+                                        </a>&emsp;
+                                        <button onclick="deleteTask(this)" Task_Id="@item.Task_Id" class="btn-update" style="color:red;">
+                                            <i class="glyphicon glyphicon-trash"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">No Tasks Found!</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    function deleteTask(obj) {
+        let Task_Id = $(obj).attr('Task_Id');
+        let isConfirm= confirm("Are you sure delete this Task")
+        $.post("/Task/DeleteTask", { Task_Id:Task_Id }, function (res) {
+            if (res!=null && res!="") {
+                
+                if (res.includes('successfully')) {
+
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Task Deleted Succesfully',
+                    icon: 'success',
+                    confirmButtonColor: '#007bff',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+                        window.location.href = window.location.href
+                    }
+                });
+            }
+            else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Some thing went wrong',
+                    icon: 'error',
+                    confirmButtonColor: '#dc3545',
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+                        window.location.href = window.location.href;
+                    }
+                });
+            }
+
+
+            }
+
+
+        })
+
+    }
+
+</script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>

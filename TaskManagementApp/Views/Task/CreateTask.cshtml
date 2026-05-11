@@ -1,0 +1,154 @@
+﻿@model TaskManagementApp.Models.TaskDetail
+
+@{
+    ViewBag.Title = "Create New Task";
+}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+        background: linear-gradient(45deg, #007bff, #0056b3);
+        color: white;
+        border-radius: 15px 15px 0 0 !important;
+        padding: 20px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #007bff, #0056b3);
+        border: none;
+        padding: 10px 25px;
+        border-radius: 30px;
+    }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #0056b3, #004085);
+        }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+    }
+
+        .form-control:focus {
+            box-shadow: 0 0 8px rgba(0,123,255,0.25);
+            border-color: #007bff;
+        }
+</style>
+
+<script>
+
+    if ('@ViewBag.Message' != null && '@ViewBag.Message' != '')
+    {
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if ('@ViewBag.Message'.includes('successfully')) {
+
+                Swal.fire({
+                    title: 'Success!',
+                    text: '@ViewBag.Message',
+                    icon: 'success',
+                    confirmButtonColor: '#007bff',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+                        window.location.href = window.location.href
+                    }
+                });
+            }
+            else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Some thing went wrong',
+                    icon: 'error',
+                    confirmButtonColor: '#dc3545',
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+                        window.location.href = window.location.href;
+                    }
+                });
+            }
+
+
+        });
+    }
+
+
+</script>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fa fa-tasks mr-2"></i> Add New Task</h3>
+                    <small>Fill in the details below to track a new task</small>
+                </div>
+                <div class="card-body p-4">
+                    @using (Html.BeginForm("CreateTask", "Task", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="row" style="padding-left:50px;">
+                            <div class="col-sm-6" style="margin-top:12px;">
+                                <label class="font-weight-bold">Task Title <span class="text-danger">*</span></label>
+                                @Html.TextBoxFor(model => model.TaskTitle, new { @class = "form-control", placeholder = "Enter task title..." })
+
+                            </div>
+                            <div class="col-sm-6" style="margin-top:12px;">
+                                <label class="font-weight-bold">Status <span class="text-danger">*</span></label>
+                                @Html.DropDownListFor(model => model.TaskStatus, new List<SelectListItem>
+                                {   new SelectListItem { Text = "Select Status", Value = "0" },
+                                    new SelectListItem { Text = "Pending", Value = "2" },
+                                    new SelectListItem { Text = "In Progress", Value = "1" },
+                                    new SelectListItem { Text = "Completed", Value = "3" }
+                                }, new { @class = "form-control" })
+
+                            </div>
+
+                            <div class="col-sm-6" style="margin-top:12px;">
+                                <label class="font-weight-bold">Task Description</label>
+                                @Html.TextAreaFor(model => model.TaskDescription, new { @class = "form-control", rows = 3, placeholder = "Describe the task details..." })
+                            </div>
+
+
+                            <div class="col-sm-6" style="margin-top:12px;">
+                                <label class="font-weight-bold">Remarks</label>
+                                @Html.TextAreaFor(model => model.TaskRemarks, new { @class = "form-control", rows = 3, placeholder = "Any additional notes?" })
+                            </div>
+                            <div class="col-sm-6" style="margin-top:12px;">
+                                <label class="font-weight-bold">Due Date <span class="text-danger">*</span></label>
+                                @Html.TextBoxFor(model => model.TaskDueDate, new { @class = "form-control", type = "date" })
+
+                            </div>
+
+
+
+
+                        </div>
+
+                        <div class="row" style="padding-left:50px;">
+
+                            <div class="col-sm-12 text-center" style="margin:20px 0px 20px 0px">
+                                <button type="submit" class="btn btn-primary px-5">
+                                    <i class="fa fa-save mr-1"></i> Save Task
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
